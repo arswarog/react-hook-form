@@ -113,6 +113,8 @@ export function createFormControl<
     dirtyFields: {},
     errors: {},
     disabled: false,
+    isActive: false,
+    focusField: undefined,
   };
   let _fields: FieldRefs = {};
   let _defaultValues =
@@ -142,6 +144,8 @@ export function createFormControl<
     isValidating: false,
     isValid: false,
     errors: false,
+    isActive: false,
+    focusField: undefined,
   };
   const _subjects: Subjects<TFieldValues> = {
     values: createSubject(),
