@@ -2,6 +2,7 @@ import React, { PropsWithChildren } from 'react';
 import {
   useForm,
   useFormContext,
+  useController,
   FormProvider,
   ValidationMode,
   Controller,
@@ -12,6 +13,7 @@ import { useParams } from 'react-router-dom';
 
 let renderCount = 0;
 let renderCount2 = 0;
+let renderCount3 = 0;
 
 type Form = {
   firstName: string;
@@ -86,6 +88,22 @@ export function WorkSection() {
   );
 }
 
+function LastName() {
+  const { field, fieldState } = useController({
+    name: 'lastName',
+    rules: { required: true, minLength: 2 },
+  });
+
+  renderCount3++;
+  return (
+    <Section focus={fieldState.isActive}>
+      <input {...field} placeholder={field.name} />{' '}
+      {fieldState.invalid && <p>{fieldState.error?.type}</p>}
+      {renderCount3}
+    </Section>
+  );
+}
+
 export default function Focus() {
   const { mode } = useParams();
   const methods = useForm<Form>({
@@ -116,16 +134,7 @@ export default function Focus() {
           )}
         />
 
-        <Controller
-          name="lastName"
-          control={control}
-          rules={{ required: true }}
-          render={({ field: props, fieldState }) => (
-            <Section focus={fieldState.isActive}>
-              <input {...props} placeholder={props.name} />
-            </Section>
-          )}
-        />
+        <LastName />
 
         <WorkSection />
 
