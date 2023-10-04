@@ -1,0 +1,140 @@
+import React, { PropsWithChildren } from 'react';
+import {
+  useForm,
+  useFormContext,
+  FormProvider,
+  ValidationMode,
+  Controller,
+} from 'react-hook-form';
+import ReactSelect from 'react-select';
+
+import { useParams } from 'react-router-dom';
+
+let renderCount = 0;
+let renderCount2 = 0;
+
+type Form = {
+  firstName: string;
+  lastName: string;
+  work: {
+    name: string;
+    position: string;
+  };
+};
+
+const defaultValues: Form = {
+  firstName: '',
+  lastName: '',
+  work: {
+    name: '',
+    position: 'developer',
+  },
+};
+
+const PureReactSelect = React.memo(ReactSelect);
+
+function Section({ children, focus }: PropsWithChildren<{ focus?: boolean }>) {
+  return (
+    <section
+      style={{
+        borderLeftStyle: 'solid',
+        borderLeftWidth: '2px',
+        borderLeftColor: focus ? 'grey' : 'transparent',
+        paddingLeft: '4px',
+        marginBottom: '4px',
+      }}
+    >
+      {children}
+    </section>
+  );
+}
+
+/**
+ * - controlled
+ * - nested
+ * - array
+ * - display focus
+ */
+
+export function WorkSection() {
+  const {
+    register,
+    formState: { errors },
+    getFieldState,
+  } = useFormContext<Form>();
+
+  renderCount2++;
+  return (
+    <Section focus={getFieldState('work').isActive}>
+      <Section focus={getFieldState('work.name').isActive}>
+        <input
+          placeholder="work.name"
+          {...register('work.name', { required: true, minLength: 2 })}
+        />
+        {errors.work?.name && <p>work.name error</p>}
+      </Section>
+
+      <Section focus={getFieldState('work.position').isActive}>
+        <input
+          placeholder="work.position"
+          {...register('work.position', { required: true, minLength: 2 })}
+        />
+        {errors.work?.position && <p>work.position error</p>}
+      </Section>
+      {renderCount2}
+    </Section>
+  );
+}
+
+export default function Focus() {
+  const { mode } = useParams();
+  const methods = useForm<Form>({
+    defaultValues,
+    mode: mode as keyof ValidationMode,
+  });
+
+  const {
+    handleSubmit,
+    formState: { errors },
+    control,
+  } = methods;
+
+  renderCount++;
+
+  return (
+    <FormProvider {...methods}>
+      <form onSubmit={handleSubmit(() => {})}>
+        <Controller
+          name="firstName"
+          control={control}
+          rules={{ required: true, minLength: 2 }}
+          render={({ field, fieldState }) => (
+            <Section focus={fieldState.isActive}>
+              <input {...field} placeholder={field.name} />
+              {fieldState.invalid && <p>{fieldState.error?.type}</p>}
+            </Section>
+          )}
+        />
+
+        <Controller
+          name="lastName"
+          control={control}
+          rules={{ required: true }}
+          render={({ field: props, fieldState }) => (
+            <Section focus={fieldState.isActive}>
+              <input {...props} placeholder={props.name} />
+            </Section>
+          )}
+        />
+
+        <WorkSection />
+
+        <Section>
+          <button id="submit">submit</button>
+        </Section>
+
+        <span id="renderCount">{renderCount}</span>
+      </form>
+    </FormProvider>
+  );
+}
