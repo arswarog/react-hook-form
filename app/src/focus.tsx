@@ -6,6 +6,7 @@ import {
   FormProvider,
   ValidationMode,
   Controller,
+  useFormState,
 } from 'react-hook-form';
 import ReactSelect from 'react-select';
 
@@ -59,11 +60,8 @@ function Section({ children, focus }: PropsWithChildren<{ focus?: boolean }>) {
  */
 
 export function WorkSection() {
-  const {
-    register,
-    formState: { errors },
-    getFieldState,
-  } = useFormContext<Form>();
+  const { register, getFieldState } = useFormContext<Form>();
+  const { errors, focusField } = useFormState<Form>();
 
   renderCount2++;
   return (
@@ -104,6 +102,11 @@ function LastName() {
   );
 }
 
+function FormStatus() {
+  const formState = useFormState();
+  return <p>focusField: {String(formState.focusField)}</p>;
+}
+
 export default function Focus() {
   const { mode } = useParams();
   const methods = useForm<Form>({
@@ -111,11 +114,7 @@ export default function Focus() {
     mode: mode as keyof ValidationMode,
   });
 
-  const {
-    handleSubmit,
-    formState: { errors },
-    control,
-  } = methods;
+  const { handleSubmit, formState, control } = methods;
 
   renderCount++;
 
@@ -142,7 +141,8 @@ export default function Focus() {
           <button id="submit">submit</button>
         </Section>
 
-        <span id="renderCount">{renderCount}</span>
+        <p id="renderCount">{renderCount}</p>
+        <FormStatus />
       </form>
     </FormProvider>
   );

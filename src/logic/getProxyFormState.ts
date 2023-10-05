@@ -11,6 +11,7 @@ export default <TFieldValues extends FieldValues, TContext = any>(
     defaultValues: control._defaultValues,
   } as typeof formState;
 
+  console.log('create proxy', JSON.stringify(control._proxyFormState, null, 2));
   for (const key in formState) {
     Object.defineProperty(result, key, {
       get: () => {

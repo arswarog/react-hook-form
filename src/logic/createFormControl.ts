@@ -82,6 +82,7 @@ import skipValidation from './skipValidation';
 import unsetEmptyArray from './unsetEmptyArray';
 import updateFieldArrayRootError from './updateFieldArrayRootError';
 import validateField from './validateField';
+import getFieldIsActive from './getFieldIsActive';
 
 const defaultOptions = {
   mode: VALIDATION_MODE.onSubmit,
@@ -146,7 +147,7 @@ export function createFormControl<
     isValid: false,
     errors: false,
     isActive: false,
-    focusField: undefined,
+    focusField: true,
   };
   const _subjects: Subjects<TFieldValues> = {
     values: createSubject(),
@@ -283,13 +284,13 @@ export function createFormControl<
   const updateActiveField = (name?: InternalFieldName) => {
     console.log('updateActiveField (empty function)', name);
     // console.log('updateActiveField', name);
-    // if (name === _formState.focusField) {
-    //   return;
-    // }
-    //
+    if (name === _formState.focusField) {
+      return;
+    }
+
     // set(_formState, 'focusField', name);
     // console.log('focus on', name);
-    // _subjects.state.next({ focusField: name as any });
+    _subjects.state.next({ focusField: name as any });
   };
 
   const updateTouchAndDirty = (
@@ -897,7 +898,7 @@ export function createFormControl<
     invalid: !!get((formState || _formState).errors, name),
     isDirty: !!get((formState || _formState).dirtyFields, name),
     isTouched: !!get((formState || _formState).touchedFields, name),
-    isActive: true,
+    isActive: getFieldIsActive(formState || _formState, name),
     error: get((formState || _formState).errors, name),
   });
 

@@ -21,6 +21,7 @@ import { useFormContext } from './useFormContext';
 import { useFormState } from './useFormState';
 import { useWatch } from './useWatch';
 import { set } from './utils';
+import getFieldIsActive from './logic/getFieldIsActive';
 
 /**
  * Custom hook to work with controlled component, this function provide you with both form and field level state. Re-render is isolated at the hook level.
@@ -193,7 +194,7 @@ export function useController<
         },
         isActive: {
           enumerable: true,
-          get: () => true,
+          get: () => getFieldIsActive(formState, name),
         },
         error: {
           enumerable: true,
