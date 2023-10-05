@@ -137,6 +137,7 @@ export function createFormControl<
   };
   let delayErrorCallback: DelayCallback | null;
   let timer = 0;
+  let _focusTimeout: ReturnType<typeof setTimeout> | undefined = undefined;
   const _proxyFormState = {
     isDirty: false,
     dirtyFields: false,
@@ -277,6 +278,18 @@ export function createFormControl<
 
       _state.mount && _updateValid();
     }
+  };
+
+  const updateActiveField = (name?: InternalFieldName) => {
+    console.log('updateActiveField (empty function)', name);
+    // console.log('updateActiveField', name);
+    // if (name === _formState.focusField) {
+    //   return;
+    // }
+    //
+    // set(_formState, 'focusField', name);
+    // console.log('focus on', name);
+    // _subjects.state.next({ focusField: name as any });
   };
 
   const updateTouchAndDirty = (
@@ -659,6 +672,22 @@ export function createFormControl<
     !_state.mount && flushRootRender();
   };
 
+  const onFocus: ChangeHandler = async (event) => {
+    const target = event.target;
+    const name = target.name;
+    console.log('onFocus', name, event.type);
+    const field: Field = get(_fields, name);
+
+    if (!field) {
+      return;
+    }
+
+    clearTimeout(_focusTimeout);
+    // _focusField = name;
+
+    updateActiveField(name);
+  };
+
   const onChange: ChangeHandler = async (event) => {
     const target = event.target;
     let name = target.name;
@@ -686,6 +715,12 @@ export function createFormControl<
           validationModeBeforeSubmit,
         );
       const watched = isWatched(name, _names, isBlurEvent);
+
+      if (isBlurEvent) {
+        _focusTimeout = setTimeout(() => {
+          updateActiveField();
+        });
+      }
 
       set(_formValues, name, fieldValue);
 
@@ -862,6 +897,7 @@ export function createFormControl<
     invalid: !!get((formState || _formState).errors, name),
     isDirty: !!get((formState || _formState).dirtyFields, name),
     isTouched: !!get((formState || _formState).touchedFields, name),
+    isActive: true,
     error: get((formState || _formState).errors, name),
   });
 
@@ -1007,6 +1043,7 @@ export function createFormControl<
       name,
       onChange,
       onBlur: onChange,
+      onFocus,
       ref: (ref: HTMLInputElement | null): void => {
         if (ref) {
           register(name, options);

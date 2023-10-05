@@ -4,6 +4,7 @@ export const EVENTS = {
   BLUR: 'blur',
   FOCUS_OUT: 'focusout',
   CHANGE: 'change',
+  FOCUS: 'focus',
 };
 
 export const VALIDATION_MODE: ValidationMode = {

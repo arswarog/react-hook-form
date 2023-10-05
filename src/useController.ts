@@ -151,6 +151,16 @@ export function useController<
           }),
         [name, control],
       ),
+      onFocus: React.useCallback(
+        () =>
+          _registerProps.current.onFocus({
+            target: {
+              name: name as InternalFieldName,
+            },
+            type: EVENTS.FOCUS,
+          }),
+        [name, control],
+      ),
       ref: (elm) => {
         const field = get(control._fields, name);
 
@@ -180,6 +190,10 @@ export function useController<
         isTouched: {
           enumerable: true,
           get: () => !!get(formState.touchedFields, name),
+        },
+        isActive: {
+          enumerable: true,
+          get: () => true,
         },
         error: {
           enumerable: true,
