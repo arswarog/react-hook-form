@@ -52,13 +52,6 @@ function Section({ children, focus }: PropsWithChildren<{ focus?: boolean }>) {
   );
 }
 
-/**
- * - controlled
- * - nested
- * - array
- * - display focus
- */
-
 export function WorkSection() {
   const { register, getFieldState } = useFormContext<Form>();
   const { errors, focusField } = useFormState<Form>();

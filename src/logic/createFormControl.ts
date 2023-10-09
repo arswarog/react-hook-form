@@ -138,7 +138,7 @@ export function createFormControl<
   };
   let delayErrorCallback: DelayCallback | null;
   let timer = 0;
-  let _focusTimeout: ReturnType<typeof setTimeout> | undefined = undefined;
+  let _focusTimeout: ReturnType<typeof setTimeout> | undefined;
   const _proxyFormState = {
     isDirty: false,
     dirtyFields: false,
@@ -147,7 +147,7 @@ export function createFormControl<
     isValid: false,
     errors: false,
     isActive: false,
-    focusField: true,
+    focusField: false,
   };
   const _subjects: Subjects<TFieldValues> = {
     values: createSubject(),
@@ -282,14 +282,10 @@ export function createFormControl<
   };
 
   const updateActiveField = (name?: InternalFieldName) => {
-    console.log('updateActiveField (empty function)', name);
-    // console.log('updateActiveField', name);
     if (name === _formState.focusField) {
       return;
     }
 
-    // set(_formState, 'focusField', name);
-    // console.log('focus on', name);
     _subjects.state.next({ focusField: name as any });
   };
 
@@ -676,7 +672,6 @@ export function createFormControl<
   const onFocus: ChangeHandler = async (event) => {
     const target = event.target;
     const name = target.name;
-    console.log('onFocus', name, event.type);
     const field: Field = get(_fields, name);
 
     if (!field) {
@@ -684,7 +679,6 @@ export function createFormControl<
     }
 
     clearTimeout(_focusTimeout);
-    // _focusField = name;
 
     updateActiveField(name);
   };

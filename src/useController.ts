@@ -25,7 +25,7 @@ import getFieldIsActive from './logic/getFieldIsActive';
 import { useSubscribe } from './useSubscribe';
 
 /**
- * Custom hook to work with controlled  component, this function provide you with both form and field level state. Re-render is isolated at the hook level.
+ * Custom hook to work with controlled component, this function provide you with both form and field level state. Re-render is isolated at the hook level.
  *
  * @remarks
  * [API](https://react-hook-form.com/docs/usecontroller) • [Demo](https://codesandbox.io/s/usecontroller-0o8px)

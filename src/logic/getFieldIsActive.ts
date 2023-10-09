@@ -4,7 +4,6 @@ export default function <TFieldValues extends FieldValues>(
   focusField: FieldPath<TFieldValues> | undefined,
   name: FieldPath<TFieldValues>,
 ): boolean {
-  console.log('  getFieldIsActive', name);
   if (!focusField) {
     return false;
   }
