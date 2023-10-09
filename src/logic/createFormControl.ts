@@ -898,7 +898,10 @@ export function createFormControl<
     invalid: !!get((formState || _formState).errors, name),
     isDirty: !!get((formState || _formState).dirtyFields, name),
     isTouched: !!get((formState || _formState).touchedFields, name),
-    isActive: getFieldIsActive(formState || _formState, name),
+    isActive: getFieldIsActive(
+      get(formState || _formState, 'focusField'),
+      name,
+    ),
     error: get((formState || _formState).errors, name),
   });
 

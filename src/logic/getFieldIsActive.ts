@@ -1,12 +1,9 @@
-import { FieldPath, FieldValues, FormState } from '../types';
-import get from '../utils/get';
+import { FieldPath, FieldValues } from '../types';
 
 export default function <TFieldValues extends FieldValues>(
-  formState: FormState<TFieldValues>,
+  focusField: FieldPath<TFieldValues> | undefined,
   name: FieldPath<TFieldValues>,
 ): boolean {
-  const focusField = get(formState, 'focusField');
-
   console.log('  getFieldIsActive', name);
   if (!focusField) {
     return false;
